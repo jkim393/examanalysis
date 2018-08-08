@@ -37,6 +37,7 @@ with open(filename, 'r') as csvfile:
     #initializing the items dict with question numbers as keys with empty lists.
     for q in rows[0][0:numQuestions]:
         items[q] = []
+        items_1_0[q]=[]
         questions.append(q)
 
 #appending answers list to the items dictionary
@@ -68,7 +69,6 @@ fields = ["Item ID", "# of Students Answered Correct", "# of Students Answered I
 big_data = []
 
 
-
 data = dict.fromkeys(fields)
 
 def correct(id, answer):
@@ -78,48 +78,6 @@ def correct(id, answer):
 			count += 1
 	return count
 
-"""
-def KR20():
-	K = int(input(len(questions)))
-	n = int(input('Enter the total sample size as an integer: '))
-	print('Now you will enter the data for each item.')
-	print('For your reference, p is the proportion of correct responses to each item.')
-	print('In contrast, q is the proportion of incorrect responses to each item.')
-	count = 0
-	scount = 0
-	mulbox = []
-	Xbox=[]
-	XboxS=[]
-	XboxM=[]
-	while count < K:
-	    count = count + 1
-	    countString = str(count)
-	    print("Please enter the information for item number " + countString + " below.")
-	    pstr = input("Please enter the p value: ")
-	    p = decimal.Decimal(pstr)
-	    qstr = input("Please enter the q value: ")
-	    q = decimal.Decimal(qstr)
-	    mulval = decimal.Decimal(p*q)
-	    mulbox.append(decimal.Decimal(mulval))
-	while scount < n:
-	    scount = scount + 1
-	    scountString = str(scount)
-	    print("Please enter the information for student number " + scountString + " below.")
-	    scorestr=input("Please enter the student score as an integer: ")
-	    score=decimal.Decimal(scorestr)
-	    Xbox.append(score)
-	Xmean=decimal.Decimal(sum(Xbox)/n)
-	XboxM = [x - Xmean for x in Xbox]
-	XboxS = [x*x for x in XboxM]
-	var1=sum(XboxS)
-	vart=sum(XboxS)/n
-	vartString=str(vart)
-	krsum=sum(mulbox)
-	krfront=decimal.Decimal(decimal.Decimal(K)/decimal.Decimal(K-1))
-	kr20val=krfront*(1-krsum/vart)
-	kr20valStr=str(kr20val)
-	return kr20valStr
-"""
 
 #loop through question by question
 for x, y in zip(questions, keys):
@@ -133,7 +91,7 @@ for x, y in zip(questions, keys):
     data["r with FR"] = np.correlate(items_1_0[x], fr)
     data["r with MC+FR"] = np.correlate(items_1_0[x], total)
     data["KR-20 if Item Omitted"] = "-"
-    data["KR-20"] = 1 #variable
+    data["KR-20"] = 1
     data["Key"] = y
     data["#ofA"] = 1
     data["#ofB"] = 1
@@ -155,6 +113,23 @@ for x, y in zip(questions, keys):
     data["rofF"] = 1
 
     big_data.append(data.copy())
+
+
+
+def KR20(Pvalue):
+	PQ = []
+	
+	for x in big_data:
+		p = x["P Values"]
+		q = 1 - x["P Values"]
+		mulval = p*q
+		PQ.append(mulval)
+
+	pqSum = sum(PQ) 
+	varince = np.var(mc)
+
+	kr20 = (numQuestions/(numQuestions-1))*(1-pqSum/varience)
+	return kr20
 
 
 
