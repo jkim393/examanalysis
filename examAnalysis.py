@@ -1,5 +1,6 @@
 #reference: https://www.geeksforgeeks.org/working-csv-files-python/
 #importing csv module
+import numpy as np
 import csv
 
 # csv file name (maybe pass it in as argument)
@@ -13,6 +14,7 @@ mc = []
 fr = []
 total = []
 questions = []
+items_1_0 = {}
 
 # reading csv file
 with open(filename, 'r') as csvfile:
@@ -34,6 +36,7 @@ with open(filename, 'r') as csvfile:
     #initializing the items dict with question numbers as keys with empty lists.
     for q in rows[0][0:numQuestions]:
         items[q] = []
+        items_1_0[q] = []
         questions.append(q)
 
 #appending answers list to the items dictionary
@@ -46,6 +49,15 @@ for row in rows[1:]:
     mc.append(float(row[numQuestions]))
     fr.append(float(row[numQuestions + 1]))
     total.append(mc[-1] + fr[-1])
+
+
+for x, y in zip(questions, keys):
+        for z in items[x]:
+            if z == y:
+                items_1_0[x].append(1)
+            else:
+                items_1_0[x].append(0)
+
  
 fields = ["Item ID", "# of Students Answered Correct", "# of Students Answered Incorrect",
           "Mean MC Scores of Students Answered Correct", "Mean MC Scores of Students Answered Incorrect", 
