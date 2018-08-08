@@ -1,5 +1,6 @@
 #reference: https://www.geeksforgeeks.org/working-csv-files-python/
 #importing csv module
+import numpy as np
 import csv
 import numpy as np
 
@@ -36,7 +37,7 @@ with open(filename, 'r') as csvfile:
     #initializing the items dict with question numbers as keys with empty lists.
     for q in rows[0][0:numQuestions]:
         items[q] = []
-        items_1_0[q]=[]
+        items_1_0[q] = []
         questions.append(q)
 
 #appending answers list to the items dictionary
@@ -51,23 +52,24 @@ for row in rows[1:]:
     total.append(mc[-1] + fr[-1])
 
 for x, y in zip(questions, keys):
-	for z in items[x]:
-		if z == y:
-			items_1_0[x].append(1)
-		else:
-			items_1_0[x].append(0)
+        for z in items[x]:
+            if z == y:
+                items_1_0[x].append(1)
+            else:
+                items_1_0[x].append(0)
+
  
 fields = ["Item ID", "# of Students Answered Correct", "# of Students Answered Incorrect",
-          "Mean Scores of Students Answered Correct", "Mean Scores of Students Answered Incorrect",
-          "P Values", "r with MC", "r with FR", "r with MC+FR", "KR-20 if Item Omitted",
+          "Mean MC Scores of Students Answered Correct", "Mean MC Scores of Students Answered Incorrect", 
+          "Mean FR Scores of Students Answered Correct", "Mean FR Scores of Students Answered Incorrect",
+          "Mean Total Scores of Students Answered Correct", "Mean Total Scores of Students Answered Incorrect",
+          "P Values", "r with MC", "r with FR", "r with MC+FR", "KR-20 if Item Omitted", "KR-20",
           "Key", "#ofA", "#ofB", "#ofC", "#ofD", "#ofE", "#ofF", "%ofA", "%ofB", "%ofC", "%ofD", "%ofE", "%ofF",
           "rofA", "rofB", "rofC", "rofD", "rofE", "rofF"
           ]
 
 #rows
 big_data = []
-
-
 data = dict.fromkeys(fields)
 
 def correct(id, answer):
@@ -77,32 +79,68 @@ def correct(id, answer):
 			count += 1
 	return count
 
+def meanCorrect(itemsID, answer, listTestScores):
+    sum = 0
+    count = 0
+    for response, score in zip(items[itemsID], listTestScores):
+        if response == answer:
+            sum += score
+            count += 1
+    return sum/count
+
+
+
+def meanIncorrect(itemsID, answer, listTestScores):
+    sum = 0
+    count = 0
+    for response, score in zip(items[itemsID], listTestScores):
+        if response != answer:
+            sum += score
+            count += 1
+    if count != 0:
+        return sum/count
+    else:
+        return "-"
+
+def countAnswerChosen(itemsID, answer):
+    count = 0
+    for response in items[itemsID]:
+        if response == answer:
+            count += 1
+    return count
+
+
 
 #loop through question by question
 for x, y in zip(questions, keys):
     data["Item ID"] = x
     data["# of Students Answered Correct"] = correct(x, y)
-    data["# of Students Answered Incorrect"] = numStudents-correct(x, y)
-    data["Mean Scores of Students Answered Correct"] = 1
-    data["Mean Scores of Students Answered Incorrect"] = 1 
-    data["P Values"] = data["# of Students Answered Correct"] / numStudents
     data["r with MC"] = np.correlate(items_1_0[x], mc)
     data["r with FR"] = np.correlate(items_1_0[x], fr)
     data["r with MC+FR"] = np.correlate(items_1_0[x], total)
+    data["# of Students Answered Incorrect"] = numStudents-data["# of Students Answered Correct"]
+    data["Mean MC Scores of Students Answered Correct"] = meanCorrect(x,y,mc)
+    data["Mean MC Scores of Students Answered Incorrect"] = meanIncorrect(x,y,mc)
+    data["Mean FR Scores of Students Answered Correct"] = meanCorrect(x,y,fr)
+    data["Mean FR Scores of Students Answered Incorrect"] = meanIncorrect(x,y,fr)
+    data["Mean Total Scores of Students Answered Correct"] = meanCorrect(x,y,total)
+    data["Mean Total Scores of Students Answered Incorrect"] = meanIncorrect(x,y,total)
+    data["P Values"] = data["# of Students Answered Correct"]/numStudents
     data["KR-20 if Item Omitted"] = "-"
     data["Key"] = y
-    data["#ofA"] = 1
-    data["#ofB"] = 1
-    data["#ofC"] = 1
-    data["#ofD"] = 1
-    data["#ofE"] = 1
-    data["#ofF"] = 1
-    data["%ofA"] = 1
-    data["%ofB"] = 1
-    data["%ofC"] = 1
-    data["%ofD"] = 1
-    data["%ofE"] = 1
-    data["%ofF"] = 1
+    data["#ofA"] = countAnswerChosen(x, "a")
+    data["#ofB"] = countAnswerChosen(x, "b")
+    data["#ofC"] = countAnswerChosen(x, "c")
+    data["#ofD"] = countAnswerChosen(x, "d")
+    data["#ofE"] = countAnswerChosen(x, "e")
+    data["#ofF"] = countAnswerChosen(x, "f")
+    sum = data["#ofA"]+data["#ofB"]+data["#ofC"]+data["#ofD"]+data["#ofE"]+data["#ofF"]
+    data["%ofA"] = data['#ofA']/sum
+    data["%ofB"] = data['#ofB']/sum
+    data["%ofC"] = data['#ofC']/sum
+    data["%ofD"] = data['#ofD']/sum
+    data["%ofE"] = data['#ofE']/sum
+    data["%ofF"] = data['#ofF']/sum
     data["rofA"] = 1
     data["rofB"] = 1
     data["rofC"] = 1
@@ -145,11 +183,6 @@ with open(filename, 'w') as csvfile:
      
     # writing data rows
     writer.writerows(big_data)
-
-
-
-
-
 
 
 
