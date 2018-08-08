@@ -68,6 +68,28 @@ def correct(id, answer):
 			count += 1
 	return count
 
+def meanCorrect(itemsID, answer, listTestScores):
+    sum = 0
+    count = 0
+    for response, score in zip(items[itemsID], listTestScores):
+        if response == answer:
+            sum += score
+            count += 1
+    return sum/count
+
+
+
+def meanIncorrect(itemsID, answer, listTestScores):
+    sum = 0
+    count = 0
+    for response, score in zip(items[itemsID], listTestScores):
+        if response != answer:
+            sum += score
+            count += 1
+    if count != 0:
+        return sum/count
+    else:
+        return "-"
 
 
 #loop through question by question
@@ -75,8 +97,9 @@ for x, y in zip(questions, keys):
     data["Item ID"] = x
     data["# of Students Answered Correct"] = correct(x, y)
     data["# of Students Answered Incorrect"] = numStudents-correct(x, y)
-    data["Mean Scores of Students Answered Correct"] = 1
-    data["Mean Scores of Students Answered Incorrect"] = 1 
+    data["Mean Scores of Students Answered Correct"] = meanCorrect(x,y,mc)
+    data["Mean Scores of Students Answered Incorrect"] = meanIncorrect(x,y,mc)
+    #  mean scores for both frq and mc
     data["P Values"] = 1
     data["r with MC"] = 1
     data["r with FR"] = 1
@@ -123,11 +146,6 @@ with open(filename, 'w') as csvfile:
      
     # writing data rows
     writer.writerows(big_data)
-
-
-
-
-
 
 
 
