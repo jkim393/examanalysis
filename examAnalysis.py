@@ -66,13 +66,15 @@ def correct(id, answer):
 	for x in items[id]:
 		if x==answer:
 			count += 1
+	return count
+
 
 
 #loop through question by question
 for x, y in zip(questions, keys):
     data["Item ID"] = x
     data["# of Students Answered Correct"] = correct(x, y)
-    data["# of Students Answered Incorrect"] = 40 #90 - function(items,x)
+    data["# of Students Answered Incorrect"] = numStudents-correct(x, y)
     data["Mean Scores of Students Answered Correct"] = 1
     data["Mean Scores of Students Answered Incorrect"] = 1 
     data["P Values"] = 1
