@@ -1,6 +1,7 @@
 #reference: https://www.geeksforgeeks.org/working-csv-files-python/
 #importing csv module
 import csv
+import numpy as np
 
 # csv file name (maybe pass it in as argument)
 filename = "sampleData.csv"
@@ -13,6 +14,7 @@ mc = []
 fr = []
 total = []
 questions = []
+items_1_0 = {}
 
 # reading csv file
 with open(filename, 'r') as csvfile:
@@ -46,6 +48,11 @@ for row in rows[1:]:
     mc.append(float(row[numQuestions]))
     fr.append(float(row[numQuestions + 1]))
     total.append(mc[-1] + fr[-1])
+
+for x, y in zip(questions, keys):
+	for z in items[x]:
+		if z == y:
+			items_1_0.[x].append(z)
  
 fields = ["Item ID", "# of Students Answered Correct", "# of Students Answered Incorrect",
           "Mean Scores of Students Answered Correct", "Mean Scores of Students Answered Incorrect",
@@ -70,6 +77,7 @@ def correct(id, answer):
 
 
 
+
 #loop through question by question
 for x, y in zip(questions, keys):
     data["Item ID"] = x
@@ -78,9 +86,9 @@ for x, y in zip(questions, keys):
     data["Mean Scores of Students Answered Correct"] = 1
     data["Mean Scores of Students Answered Incorrect"] = 1 
     data["P Values"] = 1
-    data["r with MC"] = 1
-    data["r with FR"] = 1
-    data["r with MC+FR"] = 1
+    data["r with MC"] = np.correlate(items_1_0[x], mc)
+    data["r with FR"] = np.correlate(items_1_0[x], fr)
+    data["r with MC+FR"] = np.correlate(items_1_0[x], total)
     data["KR-20 if Item Omitted"] = "-"
     data["KR-20"] = 1 #variable
     data["Key"] = y
