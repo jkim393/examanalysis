@@ -49,7 +49,9 @@ for row in rows[1:]:
  
 fields = ["Item ID", "# of Students Answered Correct", "# of Students Answered Incorrect",
           "Mean Scores of Students Answered Correct", "Mean Scores of Students Answered Incorrect",
-          "P Values", "r with MC", "r with FR", "r with MC+FR", "KR-20 if Item Omitted", "KR-20"
+          "P Values", "r with MC", "r with FR", "r with MC+FR", "KR-20 if Item Omitted", "KR-20",
+          "Key", "#ofA", "#ofB", "#ofC", "#ofD", "#ofE", "#ofF", "%ofA", "%ofB", "%ofC", "%ofD", "%ofE", "%ofF",
+          "rofA", "rofB", "rofC", "rofD", "rofE", "rofF"
           ]
 
 #rows
@@ -60,7 +62,7 @@ big_data = []
 data = dict.fromkeys(fields)
 
 #loop through question by question
-for x in questions:
+for x, y in zip(questions, keys):
     data["Item ID"] = x
     data["# of Students Answered Correct"] = 50 #function(items, x)
     data["# of Students Answered Incorrect"] = 40 #90 - function(items,x)
@@ -72,7 +74,26 @@ for x in questions:
     data["r with MC+FR"] = 1
     data["KR-20 if Item Omitted"] = "-"
     data["KR-20"] = 1 #variable
-    #print (data)
+    data["Key"] = y
+    data["#ofA"] = 1
+    data["#ofB"] = 1
+    data["#ofC"] = 1
+    data["#ofD"] = 1
+    data["#ofE"] = 1
+    data["#ofF"] = 1
+    data["%ofA"] = 1
+    data["%ofB"] = 1
+    data["%ofC"] = 1
+    data["%ofD"] = 1
+    data["%ofE"] = 1
+    data["%ofF"] = 1
+    data["rofA"] = 1
+    data["rofB"] = 1
+    data["rofC"] = 1
+    data["rofD"] = 1
+    data["rofE"] = 1
+    data["rofF"] = 1
+
     big_data.append(data.copy())
 
 
@@ -81,18 +102,23 @@ for x in questions:
 
 
 
-# # name of csv file
-# filename = "Results.csv"
+# name of csv file
+filename = "Results.csv"
  
-# # writing to csv file
-# with open(filename, 'w') as csvfile:
-#     writer = csv.DictWriter(csvfile, fieldnames = fields)
+# writing to csv file
+with open(filename, 'w') as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames = fields)
      
-#     # writing headers (field names)
-#     writer.writeheader()
+    # writing headers (field names)
+    writer.writeheader()
      
-#     # writing data rows
-#     writer.writerows(big_data)
+    # writing data rows
+    writer.writerows(big_data)
+
+
+
+
+
 
 
 
