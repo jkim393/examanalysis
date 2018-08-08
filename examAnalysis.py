@@ -91,7 +91,7 @@ for x, y in zip(questions, keys):
     data["r with FR"] = np.correlate(items_1_0[x], fr)
     data["r with MC+FR"] = np.correlate(items_1_0[x], total)
     data["KR-20 if Item Omitted"] = "-"
-    data["KR-20"] = 1
+    data["KR-20"] = KR20()
     data["Key"] = y
     data["#ofA"] = 1
     data["#ofB"] = 1
@@ -116,7 +116,7 @@ for x, y in zip(questions, keys):
 
 
 
-def KR20(Pvalue):
+def KR20():
 	PQ = []
 	
 	for x in big_data:
