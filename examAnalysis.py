@@ -2,7 +2,6 @@
 #importing csv module
 import numpy as np
 import csv
-import numpy as np
 
 # csv file name (maybe pass it in as argument)
 filename = "sampleData.csv"
@@ -88,8 +87,6 @@ def meanCorrect(itemsID, answer, listTestScores):
             count += 1
     return sum/count
 
-
-
 def meanIncorrect(itemsID, answer, listTestScores):
     sum = 0
     count = 0
@@ -109,15 +106,16 @@ def countAnswerChosen(itemsID, answer):
             count += 1
     return count
 
-
+def r(id, score):
+    if numStudents == correct(questions, keys):
+        return "-"
+    else:
+        return np.corrcoef(items_1_0[id],score)[1,0]
 
 #loop through question by question
 for x, y in zip(questions, keys):
     data["Item ID"] = x
     data["# of Students Answered Correct"] = correct(x, y)
-    data["r with MC"] = np.correlate(items_1_0[x], mc)
-    data["r with FR"] = np.correlate(items_1_0[x], fr)
-    data["r with MC+FR"] = np.correlate(items_1_0[x], total)
     data["# of Students Answered Incorrect"] = numStudents-data["# of Students Answered Correct"]
     data["Mean MC Scores of Students Answered Correct"] = meanCorrect(x,y,mc)
     data["Mean MC Scores of Students Answered Incorrect"] = meanIncorrect(x,y,mc)
@@ -126,6 +124,9 @@ for x, y in zip(questions, keys):
     data["Mean Total Scores of Students Answered Correct"] = meanCorrect(x,y,total)
     data["Mean Total Scores of Students Answered Incorrect"] = meanIncorrect(x,y,total)
     data["P Values"] = data["# of Students Answered Correct"]/numStudents
+    data["r with MC"] = r(x, mc)
+    data["r with FR"] = r(x, fr)
+    data["r with MC+FR"] = r(x, total)
     data["KR-20 if Item Omitted"] = "-"
     data["Key"] = y
     data["#ofA"] = countAnswerChosen(x, "a")
