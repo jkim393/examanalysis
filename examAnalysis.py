@@ -2,7 +2,6 @@
 #importing csv module
 import csv
 import numpy as np
-import decimal
 
 # csv file name (maybe pass it in as argument)
 filename = "sampleData.csv"
@@ -60,7 +59,7 @@ for x, y in zip(questions, keys):
  
 fields = ["Item ID", "# of Students Answered Correct", "# of Students Answered Incorrect",
           "Mean Scores of Students Answered Correct", "Mean Scores of Students Answered Incorrect",
-          "P Values", "r with MC", "r with FR", "r with MC+FR", "KR-20 if Item Omitted", "KR-20",
+          "P Values", "r with MC", "r with FR", "r with MC+FR", "KR-20 if Item Omitted",
           "Key", "#ofA", "#ofB", "#ofC", "#ofD", "#ofE", "#ofF", "%ofA", "%ofB", "%ofC", "%ofD", "%ofE", "%ofF",
           "rofA", "rofB", "rofC", "rofD", "rofE", "rofF"
           ]
@@ -91,7 +90,6 @@ for x, y in zip(questions, keys):
     data["r with FR"] = np.correlate(items_1_0[x], fr)
     data["r with MC+FR"] = np.correlate(items_1_0[x], total)
     data["KR-20 if Item Omitted"] = "-"
-    data["KR-20"] = KR20()
     data["Key"] = y
     data["#ofA"] = 1
     data["#ofB"] = 1
@@ -115,8 +113,6 @@ for x, y in zip(questions, keys):
     big_data.append(data.copy())
 
 
-
-def KR20():
 	PQ = []
 	
 	for x in big_data:
@@ -129,7 +125,7 @@ def KR20():
 	varince = np.var(mc)
 
 	kr20 = (numQuestions/(numQuestions-1))*(1-pqSum/varience)
-	return kr20
+	print('The value for KR20 is: ' + kr20)
 
 
 
