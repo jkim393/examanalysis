@@ -113,19 +113,19 @@ for x, y in zip(questions, keys):
     big_data.append(data.copy())
 
 
-	PQ = []
+PQ = []
 	
-	for x in big_data:
-		p = x["P Values"]
-		q = 1 - x["P Values"]
-		mulval = p*q
-		PQ.append(mulval)
+for x in big_data:
+	p = x["P Values"]
+	q = 1 - x["P Values"]
+	mulval = p*q
+	PQ.append(mulval)
 
-	pqSum = sum(PQ) 
-	varince = np.var(mc)
+pqSum = sum(PQ) 
+variance = np.var(mc)
 
-	kr20 = (numQuestions/(numQuestions-1))*(1-pqSum/varience)
-	print('The value for KR20 is: ' + kr20)
+kr20 = (numQuestions/(numQuestions-1))*(1-pqSum/variance)
+print(kr20)
 
 
 
