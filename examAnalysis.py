@@ -2,6 +2,7 @@
 #importing csv module
 import csv
 import numpy as np
+import decimal
 
 # csv file name (maybe pass it in as argument)
 filename = "sampleData.csv"
@@ -52,7 +53,9 @@ for row in rows[1:]:
 for x, y in zip(questions, keys):
 	for z in items[x]:
 		if z == y:
-			items_1_0.[x].append(z)
+			items_1_0[x].append(1)
+		else:
+			items_1_0[x].append(0)
  
 fields = ["Item ID", "# of Students Answered Correct", "# of Students Answered Incorrect",
           "Mean Scores of Students Answered Correct", "Mean Scores of Students Answered Incorrect",
@@ -75,8 +78,48 @@ def correct(id, answer):
 			count += 1
 	return count
 
-
-
+"""
+def KR20():
+	K = int(input(len(questions)))
+	n = int(input('Enter the total sample size as an integer: '))
+	print('Now you will enter the data for each item.')
+	print('For your reference, p is the proportion of correct responses to each item.')
+	print('In contrast, q is the proportion of incorrect responses to each item.')
+	count = 0
+	scount = 0
+	mulbox = []
+	Xbox=[]
+	XboxS=[]
+	XboxM=[]
+	while count < K:
+	    count = count + 1
+	    countString = str(count)
+	    print("Please enter the information for item number " + countString + " below.")
+	    pstr = input("Please enter the p value: ")
+	    p = decimal.Decimal(pstr)
+	    qstr = input("Please enter the q value: ")
+	    q = decimal.Decimal(qstr)
+	    mulval = decimal.Decimal(p*q)
+	    mulbox.append(decimal.Decimal(mulval))
+	while scount < n:
+	    scount = scount + 1
+	    scountString = str(scount)
+	    print("Please enter the information for student number " + scountString + " below.")
+	    scorestr=input("Please enter the student score as an integer: ")
+	    score=decimal.Decimal(scorestr)
+	    Xbox.append(score)
+	Xmean=decimal.Decimal(sum(Xbox)/n)
+	XboxM = [x - Xmean for x in Xbox]
+	XboxS = [x*x for x in XboxM]
+	var1=sum(XboxS)
+	vart=sum(XboxS)/n
+	vartString=str(vart)
+	krsum=sum(mulbox)
+	krfront=decimal.Decimal(decimal.Decimal(K)/decimal.Decimal(K-1))
+	kr20val=krfront*(1-krsum/vart)
+	kr20valStr=str(kr20val)
+	return kr20valStr
+"""
 
 #loop through question by question
 for x, y in zip(questions, keys):
@@ -85,7 +128,7 @@ for x, y in zip(questions, keys):
     data["# of Students Answered Incorrect"] = numStudents-correct(x, y)
     data["Mean Scores of Students Answered Correct"] = 1
     data["Mean Scores of Students Answered Incorrect"] = 1 
-    data["P Values"] = 1
+    data["P Values"] = data["# of Students Answered Correct"] / numStudents
     data["r with MC"] = np.correlate(items_1_0[x], mc)
     data["r with FR"] = np.correlate(items_1_0[x], fr)
     data["r with MC+FR"] = np.correlate(items_1_0[x], total)
