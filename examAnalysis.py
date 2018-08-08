@@ -62,7 +62,7 @@ fields = ["Item ID", "# of Students Answered Correct", "# of Students Answered I
           "Mean MC Scores of Students Answered Correct", "Mean MC Scores of Students Answered Incorrect", 
           "Mean FR Scores of Students Answered Correct", "Mean FR Scores of Students Answered Incorrect",
           "Mean Total Scores of Students Answered Correct", "Mean Total Scores of Students Answered Incorrect",
-          "P Values", "r with MC", "r with FR", "r with MC+FR", "KR-20 if Item Omitted", "KR-20",
+          "P Values", "r with MC", "r with FR", "r with MC+FR", "KR-20 if Item Omitted",
           "Key", "#ofA", "#ofB", "#ofC", "#ofD", "#ofE", "#ofF", "%ofA", "%ofB", "%ofC", "%ofD", "%ofE", "%ofF",
           "rofA", "rofB", "rofC", "rofD", "rofE", "rofF"
           ]
@@ -106,8 +106,8 @@ def countAnswerChosen(itemsID, answer):
             count += 1
     return count
 
-def r(id, score):
-    if numStudents == correct(questions, keys):
+def r(id, score, numCorrect):
+    if numStudents == numCorrect:
         return "-"
     else:
         return np.corrcoef(items_1_0[id],score)[1,0]
@@ -124,9 +124,9 @@ for x, y in zip(questions, keys):
     data["Mean Total Scores of Students Answered Correct"] = meanCorrect(x,y,total)
     data["Mean Total Scores of Students Answered Incorrect"] = meanIncorrect(x,y,total)
     data["P Values"] = data["# of Students Answered Correct"]/numStudents
-    data["r with MC"] = r(x, mc)
-    data["r with FR"] = r(x, fr)
-    data["r with MC+FR"] = r(x, total)
+    data["r with MC"] = r(x, mc, data["# of Students Answered Correct"])
+    data["r with FR"] = r(x, fr, data["# of Students Answered Correct"])
+    data["r with MC+FR"] = r(x, total, data["# of Students Answered Correct"])
     data["KR-20 if Item Omitted"] = "-"
     data["Key"] = y
     data["#ofA"] = countAnswerChosen(x, "a")
@@ -135,13 +135,13 @@ for x, y in zip(questions, keys):
     data["#ofD"] = countAnswerChosen(x, "d")
     data["#ofE"] = countAnswerChosen(x, "e")
     data["#ofF"] = countAnswerChosen(x, "f")
-    sum = data["#ofA"]+data["#ofB"]+data["#ofC"]+data["#ofD"]+data["#ofE"]+data["#ofF"]
-    data["%ofA"] = data['#ofA']/sum
-    data["%ofB"] = data['#ofB']/sum
-    data["%ofC"] = data['#ofC']/sum
-    data["%ofD"] = data['#ofD']/sum
-    data["%ofE"] = data['#ofE']/sum
-    data["%ofF"] = data['#ofF']/sum
+    addedTotal = data["#ofA"]+data["#ofB"]+data["#ofC"]+data["#ofD"]+data["#ofE"]+data["#ofF"]
+    data["%ofA"] = data['#ofA']/addedTotal
+    data["%ofB"] = data['#ofB']/addedTotal
+    data["%ofC"] = data['#ofC']/addedTotal
+    data["%ofD"] = data['#ofD']/addedTotal
+    data["%ofE"] = data['#ofE']/addedTotal
+    data["%ofF"] = data['#ofF']/addedTotal
     data["rofA"] = 1
     data["rofB"] = 1
     data["rofC"] = 1
@@ -160,7 +160,7 @@ for x in big_data:
 	mulval = p*q
 	PQ.append(mulval)
 
-pqSum = sum(PQ) 
+pqSum = sum(PQ)
 variance = np.var(mc)
 
 kr20 = (numQuestions/(numQuestions-1))*(1-pqSum/variance)
