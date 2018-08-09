@@ -82,11 +82,11 @@ big_data = []
 data = dict.fromkeys(fields)
 
 def correct(id, answer):
-	count = 0
-	for x in items[id]:
-		if x==answer:
-			count += 1
-	return count
+    count = 0
+    for x in items[id]:
+        if x==answer:
+            count += 1
+    return count
 
 def meanCorrect(itemsID, answer, listTestScores):
     sum = 0
@@ -154,11 +154,11 @@ def rChoice(itemsID, choice):
             choice_0_1.append(1)
             num += 1
         else:
-        	choice_0_1.append(0)
+            choice_0_1.append(0)
     if np.std(choice_0_1)==0:
-    	return "-"
+        return "-"
     else:
-     	return round(np.corrcoef(choice_0_1, fr)[1,0],2)
+        return round(np.corrcoef(choice_0_1, fr)[1,0],2)
 
 #loop through question by question
 count = 0
@@ -203,12 +203,12 @@ for x, y in zip(questions, keys):
 
 
 PQ = []
-	
+    
 for x in big_data:
-	p = x["P Values"]
-	q = 1 - x["P Values"]
-	mulval = p*q
-	PQ.append(mulval)
+    p = x["P Values"]
+    q = 1 - x["P Values"]
+    mulval = p*q
+    PQ.append(mulval)
 
 pqSum = sum(PQ)
 variance = np.var(mc)
@@ -218,7 +218,7 @@ last_row = ["KR-20", str(kr20)]
 
 
 # name of csv file
-filename = results.csv
+filename = "results.csv"
 
 # writing to csv file
 with open(filename, 'w') as csvfile:
