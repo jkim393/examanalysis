@@ -1,3 +1,3 @@
 # examanalysis
 python script I wrote to analyze exam data
-helloooooo
+"python examAnalysis.py <data_file.csv> <result_file.csv>"
