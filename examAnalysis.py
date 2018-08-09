@@ -95,7 +95,7 @@ def meanCorrect(itemsID, answer, listTestScores):
         if response == answer:
             sum += score
             count += 1
-    return sum/count
+    return round(sum/count, 2)
 
 def meanIncorrect(itemsID, answer, listTestScores):
     sum = 0
@@ -105,7 +105,7 @@ def meanIncorrect(itemsID, answer, listTestScores):
             sum += score
             count += 1
     if count != 0:
-        return sum/count
+        return round(sum/count, 2)
     else:
         return "-"
 
@@ -120,7 +120,7 @@ def r(id, score, numCorrect):
     if numStudents == numCorrect:
         return "-"
     else:
-        return np.corrcoef(items_1_0[id],score)[1,0]
+        return round(np.corrcoef(items_1_0[id],score)[1,0], 2)
 
 # Makes a list of P values of every question   
 pVal = []    
@@ -157,7 +157,7 @@ for x, y in zip(questions, keys):
     data["Mean FR Scores of Students Answered Incorrect"] = meanIncorrect(x,y,fr)
     data["Mean Total Scores of Students Answered Correct"] = meanCorrect(x,y,total)
     data["Mean Total Scores of Students Answered Incorrect"] = meanIncorrect(x,y,total)
-    data["P Values"] = data["# of Students Answered Correct"]/numStudents
+    data["P Values"] = round(data["# of Students Answered Correct"]/numStudents, 2)
     data["r with MC"] = r(x, mc, data["# of Students Answered Correct"])
     data["r with FR"] = r(x, fr, data["# of Students Answered Correct"])
     data["r with MC+FR"] = r(x, total, data["# of Students Answered Correct"])
