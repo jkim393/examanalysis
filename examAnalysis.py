@@ -112,7 +112,31 @@ def r(id, score, numCorrect):
     else:
         return np.corrcoef(items_1_0[id],score)[1,0]
 
+# Makes a list of P values of every question   
+pVal = []    
+for x in range(numQuestions):
+    avg = np.mean(items_1_0[questions[x]])
+    pVal.append(avg)
+        
+# kr20 if item omitted
+def kr20omit(c, q):
+    pTemp = list(pVal)
+    pTemp.pop(c)
+    qTemp = [1-x for x in pTemp]
+    mulval = [a*b for a,b in zip(pTemp,qTemp)]
+    pqSum = sum(mulval)
+    
+    mc1 = list(mc)
+    for s in range(numStudents):
+        if items_1_0[q][s] == 1:
+            mc1[s] = mc1[s]-1
+            
+    variance = np.var(mc1)
+    kr20 = (numQuestions/(numQuestions-1))*(1-pqSum/variance)
+    return round(kr20, 2)
+
 #loop through question by question
+count = 0
 for x, y in zip(questions, keys):
     data["Item ID"] = x
     data["# of Students Answered Correct"] = correct(x, y)
@@ -127,7 +151,7 @@ for x, y in zip(questions, keys):
     data["r with MC"] = r(x, mc, data["# of Students Answered Correct"])
     data["r with FR"] = r(x, fr, data["# of Students Answered Correct"])
     data["r with MC+FR"] = r(x, total, data["# of Students Answered Correct"])
-    data["KR-20 if Item Omitted"] = "-"
+    data["KR-20 if Item Omitted"] = kr20omit(count, x)
     data["Key"] = y
     data["#ofA"] = countAnswerChosen(x, "a")
     data["#ofB"] = countAnswerChosen(x, "b")
@@ -148,10 +172,11 @@ for x, y in zip(questions, keys):
     data["rofD"] = 1
     data["rofE"] = 1
     data["rofF"] = 1
-
+    
+    count += 1
     big_data.append(data.copy())
 
-
+# Calculating KR-20 value
 PQ = []
 	
 for x in big_data:
@@ -164,12 +189,7 @@ pqSum = sum(PQ)
 variance = np.var(mc)
 
 kr20 = (numQuestions/(numQuestions-1))*(1-pqSum/variance)
-print(kr20)
-
-
-
-
-
+print(round(kr20, 2))
 
 
 # name of csv file
@@ -184,9 +204,3 @@ with open(filename, 'w') as csvfile:
      
     # writing data rows
     writer.writerows(big_data)
-
-
-
-
-
-
