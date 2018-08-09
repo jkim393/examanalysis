@@ -3,12 +3,13 @@
 import numpy as np
 import csv
 import sys
+import os
 
 if len(sys.argv) < 3:
     print ("python examAnalysis.py <datafile> <resultfile>")
     sys.exit("too few arguments")
 
-# csv file name (maybe pass it in as argument)
+# csv file name
 filename = sys.argv[1]
  
 # initializing the row list, the key (answer to the question) list and item (question: answer list) dictionary
@@ -21,28 +22,32 @@ total = []
 questions = []
 items_1_0 = {}
 
-# reading csv file
-with open(filename, 'r') as csvfile:
-    # creating a csv reader object
-    csvreader = csv.reader(csvfile)
+if os.path.isfile(filename):
+    # reading csv file
+    with open(filename, 'r') as csvfile:
+        # creating a csv reader object
+        csvreader = csv.reader(csvfile)
 
-    # extracting key through first row
-    keys = next(csvreader)
-    keys = keys[0: - 2] #remove 2 empty spaces (data format issue)
-    numQuestions = len(keys)
+        # extracting key through first row
+        keys = next(csvreader)
+        keys = keys[0: - 2] #remove 2 empty spaces (data format issue)
+        
+        numQuestions = len(keys)
 
-    # extracting each data row by row
-    for row in csvreader:
-        rows.append(row)
+        # extracting each data row by row
+        for row in csvreader:
+            rows.append(row)
 
-    #number of students
-    numStudents = csvreader.line_num - 2
+        #number of students
+        numStudents = csvreader.line_num - 2
+else:
+    sys.exit("datafile doesn't exist; check your spelling")
 
-    #initializing the items dict with question numbers as keys with empty lists.
-    for q in rows[0][0:numQuestions]:
-        items[q] = []
-        items_1_0[q] = []
-        questions.append(q)
+#initializing the items dict with question numbers as keys with empty lists.
+for q in rows[0][0:numQuestions]:
+    items[q] = []
+    items_1_0[q] = []
+    questions.append(q)
 
 #appending answers list to the items dictionary
 for row in rows[1:]:
