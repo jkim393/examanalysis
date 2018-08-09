@@ -199,7 +199,7 @@ pqSum = sum(PQ)
 variance = np.var(mc)
 
 kr20 = (numQuestions/(numQuestions-1))*(1-pqSum/variance)
-print(round(kr20, 2))
+last_row = ["KR-20", str(kr20)]
 
 
 # name of csv file
@@ -214,3 +214,7 @@ with open(filename, 'w') as csvfile:
      
     # writing data rows
     writer.writerows(big_data)
+
+    # writing last row
+    csvwriter = csv.writer(csvfile)
+    csvwriter.writerow(last_row)
