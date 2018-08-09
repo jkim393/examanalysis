@@ -2,9 +2,14 @@
 #importing csv module
 import numpy as np
 import csv
+import sys
+
+if len(sys.argv) < 3:
+    print ("python examAnalysis.py <datafile> <resultfile>")
+    sys.exit("too few arguments")
 
 # csv file name (maybe pass it in as argument)
-filename = "sampleData.csv"
+filename = sys.argv[1]
  
 # initializing the row list, the key (answer to the question) list and item (question: answer list) dictionary
 rows = [] #list for 
@@ -152,6 +157,7 @@ for x, y in zip(questions, keys):
     big_data.append(data.copy())
 
 
+
 PQ = []
 	
 for x in big_data:
@@ -173,7 +179,7 @@ print(kr20)
 
 
 # name of csv file
-filename = "Results.csv"
+filename = sys.argv[2]
  
 # writing to csv file
 with open(filename, 'w') as csvfile:
