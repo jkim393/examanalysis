@@ -5,8 +5,8 @@ import csv
 import sys
 import os
 
-if len(sys.argv) < 3:
-    print ("python examAnalysis.py <datafile> <resultfile>")
+if len(sys.argv) < 2:
+    print ("python examAnalysis.py <datafile>")
     sys.exit("too few arguments")
 
 # csv file name
@@ -74,7 +74,7 @@ fields = ["Item ID", "# of Students Answered Correct", "# of Students Answered I
           "Mean Total Scores of Students Answered Correct", "Mean Total Scores of Students Answered Incorrect",
           "P Values", "r with MC", "r with FR", "r with MC+FR", "KR-20 if Item Omitted",
           "Key", "#ofA", "#ofB", "#ofC", "#ofD", "#ofE", "#ofF", "%ofA", "%ofB", "%ofC", "%ofD", "%ofE", "%ofF",
-          "rofA", "rofB", "rofC", "rofD", "rofE", "rofF"
+          "r of A with FR", "r of B with FR", "r of C with FR", "r of D with FR", "r of E with FR", "r of F with FR"
           ]
 
 #rows
@@ -145,6 +145,21 @@ def kr20omit(c, q):
     kr20 = (numQuestions/(numQuestions-1))*(1-pqSum/variance)
     return round(kr20, 2)
 
+
+def rChoice(itemsID, choice):
+    choice_0_1 = []
+    num = 0
+    for response in items[itemsID]:
+        if response == choice:
+            choice_0_1.append(1)
+            num += 1
+        else:
+        	choice_0_1.append(0)
+    if np.std(choice_0_1)==0:
+    	return "-"
+    else:
+     	return round(np.corrcoef(choice_0_1, fr)[1,0],2)
+
 #loop through question by question
 count = 0
 for x, y in zip(questions, keys):
@@ -176,12 +191,12 @@ for x, y in zip(questions, keys):
     data["%ofD"] = round(data['#ofD']/addedTotal, 2)
     data["%ofE"] = round(data['#ofE']/addedTotal, 2)
     data["%ofF"] = round(data['#ofF']/addedTotal, 2)
-    data["rofA"] = 1
-    data["rofB"] = 1
-    data["rofC"] = 1
-    data["rofD"] = 1
-    data["rofE"] = 1
-    data["rofF"] = 1
+    data["r of A with FR"] = rChoice(x,"a")
+    data["r of B with FR"] = rChoice(x,"b")
+    data["r of C with FR"] = rChoice(x,"c")
+    data["r of D with FR"] = rChoice(x,"d")
+    data["r of E with FR"] = rChoice(x,"e")
+    data["r of F with FR"] = rChoice(x,"f")
     
     count += 1
     big_data.append(data.copy())
@@ -203,8 +218,8 @@ last_row = ["KR-20", str(kr20)]
 
 
 # name of csv file
-filename = sys.argv[2]
- 
+filename = results.csv
+
 # writing to csv file
 with open(filename, 'w') as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames = fields)
