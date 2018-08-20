@@ -17,8 +17,8 @@ rows = [] #list for
 keys = [] #list for 
 items = {} #dictionary for 
 mc = []
-#fr = []
-#total = []
+fr = []
+total = []
 questions = []
 items_1_0 = {}
 
@@ -30,7 +30,7 @@ if os.path.isfile(filename):
 
         # extracting key through first row
         keys = next(csvreader)
-        keys = keys[4: - 2] #remove 2 empty spaces (data format issue)
+        keys = keys[4: - 3] #remove 2 empty spaces (data format issue)
 
         numQuestions = len(keys)
         # extracting each data row by row
@@ -57,8 +57,8 @@ for row in rows[1:]:
         items["q"+str(index)].append(col)
         index += 1
     mc.append(float(row[numQuestions+4]))
-    #fr.append(float(row[numQuestions + 1]))
-    #total.append(mc[-1] + fr[-1])
+    fr.append(float(row[numQuestions + 6]))
+    total.append(mc[-1] + fr[-1])
 
 for x, y in zip(questions, keys):
     for z in items[x]:
@@ -76,7 +76,12 @@ fields = ["Item ID", "# of Students Answered Correct", "# of Students Answered I
           #"r with FR", "r with MC+FR", 
           "KR-20 if Item Omitted",
           "Key", "#ofA", "#ofB", "#ofC", "#ofD", "#ofE", "#ofF", "%ofA", "%ofB", "%ofC", "%ofD", "%ofE", "%ofF",
-          "r of A", "r of B", "r of C", "r of D", "r of E", "r of F"
+          "r of A", "r of B", "r of C", "r of D", "r of E", "r of F", 
+          " ", " ",
+          "Mean FR Scores of Students Answered Correct", "Mean FR Scores of Students Answered Incorrect",
+          "Mean Total Scores of Students Answered Correct", "Mean Total Scores of Students Answered Incorrect",
+          "r with FR", "r with MC+FR", 
+          "r of A with FR", "r of B with FR", "r of C with FR", "r of D with FR", "r of E with FR", "r of F with FR"
           ]
 
 #rows
@@ -148,7 +153,7 @@ def kr20omit(c, q):
     return round(kr20, 2)
 
 
-def rChoice(itemsID, choice):
+def rChoice(itemsID, choice, format):
     choice_0_1 = []
     num = 0
     for response in items[itemsID]:
@@ -160,7 +165,7 @@ def rChoice(itemsID, choice):
     if np.std(choice_0_1)==0:
         return "-"
     else:
-        return round(np.corrcoef(choice_0_1, mc)[1,0],2)
+        return round(np.corrcoef(choice_0_1, format)[1,0],2)
 
 #loop through question by question
 count = 0
@@ -193,12 +198,27 @@ for x, y in zip(questions, keys):
     data["%ofD"] = round(data['#ofD']/addedTotal, 2)
     data["%ofE"] = round(data['#ofE']/addedTotal, 2)
     data["%ofF"] = round(data['#ofF']/addedTotal, 2)
-    data["r of A"] = rChoice(x,"a")
-    data["r of B"] = rChoice(x,"b")
-    data["r of C"] = rChoice(x,"c")
-    data["r of D"] = rChoice(x,"d")
-    data["r of E"] = rChoice(x,"e")
-    data["r of F"] = rChoice(x,"f")
+    data["r of A"] = rChoice(x,"a", mc)
+    data["r of B"] = rChoice(x,"b", mc)
+    data["r of C"] = rChoice(x,"c", mc)
+    data["r of D"] = rChoice(x,"d", mc)
+    data["r of E"] = rChoice(x,"e", mc)
+    data["r of F"] = rChoice(x,"f", mc)
+    data[" "] = " "
+    data[" "] = " "
+    data["Mean FR Scores of Students Answered Correct"] = meanCorrect(x,y,fr)
+    data["Mean FR Scores of Students Answered Incorrect"] = meanIncorrect(x,y,fr)
+    data["Mean Total Scores of Students Answered Correct"] = meanCorrect(x,y,total)
+    data["Mean Total Scores of Students Answered Incorrect"] = meanIncorrect(x,y,total)
+    data["r with FR"] = r(x, fr, data["# of Students Answered Correct"])
+    data["r with MC+FR"] = r(x, total, data["# of Students Answered Correct"])
+    data["r of A with FR"] = rChoice(x,"a", fr)
+    data["r of B with FR"] = rChoice(x,"b", fr)
+    data["r of C with FR"] = rChoice(x,"c", fr)
+    data["r of D with FR"] = rChoice(x,"d", fr)
+    data["r of E with FR"] = rChoice(x,"e", fr)
+    data["r of F with FR"] = rChoice(x,"f", fr)
+
     
     count += 1
     big_data.append(data.copy())
