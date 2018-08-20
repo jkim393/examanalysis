@@ -1,3 +1,4 @@
+#Written by JiHwan Kim, Tasmiyah Qazi and Joshua Sun from University of California, Riverside.
 #reference: https://www.geeksforgeeks.org/working-csv-files-python/
 #importing csv module
 import numpy as np
