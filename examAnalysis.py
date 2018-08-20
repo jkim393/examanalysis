@@ -61,11 +61,11 @@ for row in rows[1:]:
     total.append(mc[-1] + fr[-1])
 
 for x, y in zip(questions, keys):
-        for z in items[x]:
-            if z == y:
-                items_1_0[x].append(1)
-            else:
-                items_1_0[x].append(0)
+    for z in items[x]:
+        if z == y:
+            items_1_0[x].append(1)
+        else:
+            items_1_0[x].append(0)
 
  
 fields = ["Item ID", "# of Students Answered Correct", "# of Students Answered Incorrect",
@@ -216,9 +216,9 @@ variance = np.var(mc)
 kr20 = (numQuestions/(numQuestions-1))*(1-pqSum/variance)
 last_row = ["KR-20", str(kr20)]
 
-
+lhs, rhs = filename.split(".")
 # name of csv file
-filename = "results.csv"
+filename = lhs + "_results.csv"
 
 # writing to csv file
 with open(filename, 'w') as csvfile:
