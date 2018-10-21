@@ -19,7 +19,7 @@
     - lower may indicate students were just guessing on the question, or a very difficult question
 * KR-20: measured reliability of the test
     - higher is better, score above .5 is reasonable
-* # of A: number of people who chose answer choice A
+* "#" of A: number of people who chose answer choice A
 * % of A: percent of people who choise answer choice A
 * r of A: 
     - If A is the correct answer, r of A will equal r with MC.  
