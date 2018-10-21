@@ -6,8 +6,7 @@
     - free response score is optional
 * This script requires "numpy" package
      - python3 example: sudo apt install python3-pip > pip3 install numpy
-* There is a formatting problem that occurs when downloading the .csv file from Google Sheets, then opening it in Excel.
-     - Workaround: We reccomend just using Google Sheets since we have tested our script with it.
+* Although we created our csv files using google sheets, the process should be similar for Microsoft Excel.
 
 ## How to run demo file
 * In terminal: python examAnalysis.py demoFile.csv
@@ -24,5 +23,10 @@
 * r of A: 
     - If A is the correct answer, r of A will equal r with MC.  
     - If A is the wrong answer, we would usually want a negative number.  A positive number would indicate that people who did well on the exam, tended to do poorly on that question.
+
+
+
+
+
 
 Written by JiHwan Kim, Tasmiyah Qazi and Joshua Sun  
